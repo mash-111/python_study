@@ -1,4 +1,1 @@
-from struct import calcsize
-
-
-calcsize
+aaa
