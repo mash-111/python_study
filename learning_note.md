@@ -123,3 +123,167 @@ git push -u origin main    # 初回Push（-uで紐付け）
 * Git：変更確認（`git status` / `git diff`）、ブランチ作成
 
 ---
+
+はい、ここまでの学習内容をマークダウン形式のノートにまとめます。
+Git、CLI、ファイル操作、stashなど、すべて整理しました。
+
+---
+
+# 学習ノート（Python + CLI + Git 初級）
+
+## 1. CLI（コマンドライン）基本操作
+
+### 1.1 ファイル作成
+
+```bash
+# 新規ファイル作成（上書き）
+echo "Hello from Python!" > hello.py
+
+# ファイルに追記
+echo "追加のテキスト" >> hello.py
+```
+
+* `>` … 上書き
+* `>>` … 追記（append）
+
+---
+
+### 1.2 ディレクトリ作成
+
+```bash
+mkdir project        # ディレクトリ作成
+mkdir -p path/to/dir # 中間ディレクトリもまとめて作成
+```
+
+* `-p` … 中間フォルダがない場合も作成（存在してもエラーにならない）
+
+---
+
+## 2. Git 基礎操作
+
+### 2.1 ブランチ操作
+
+```bash
+git branch                  # ローカルブランチ一覧
+git branch -r               # リモートブランチ一覧
+git checkout main           # 既存ブランチへ移動
+git checkout -b feature/calc  # 新規ブランチ作成＆移動
+```
+
+* 新規ブランチは作成時点の元ブランチ内容をコピーする
+* **未コミットの変更も作成先ブランチに持ち越される**
+
+---
+
+### 2.2 push と `-u` の意味
+
+```bash
+git push -u origin main
+```
+
+* `-u` → ローカルブランチとリモートブランチを紐付け（以降 `git push` / `git pull` だけでOK）
+
+---
+
+### 2.3 リモート名とブランチ名
+
+* `origin/main` … `origin` というリモートの `main` ブランチ
+* リモートブランチの確認：
+
+```bash
+git branch -r
+```
+
+---
+
+### 2.4 fetch と pull
+
+```bash
+git fetch
+```
+
+* リモートの更新をローカルにダウンロードするだけ（作業ブランチには影響なし）
+
+```bash
+git pull
+```
+
+* `fetch` + 自分のブランチへの **merge** または **rebase**
+
+---
+
+## 3. マージとコンフリクト
+
+* `git merge` は **未コミットの変更は反映しない**（コミット済みの変更だけ）
+* コンフリクトがあると merge は中断され、解消して `git commit` が必要
+* マージ途中で中断するには：
+
+```bash
+git merge --abort
+```
+
+---
+
+## 4. .gitignore
+
+```bash
+# .DS_Store を無視する例
+.DS_Store
+```
+
+* `.gitignore` に追加 → 新規ファイルの追跡対象から外れる
+* すでに追跡中のファイルは `git rm --cached file` で追跡解除
+
+---
+
+## 5. git stash
+
+### 5.1 基本
+
+```bash
+git stash          # 変更を退避してワーキングツリーをクリーンに
+git stash pop      # 最新の stash を戻して削除
+git stash apply    # 最新の stash を戻すが削除しない
+```
+
+### 5.2 複数 stash の管理
+
+```bash
+git stash list           # stash 一覧
+git stash pop stash@{2}  # 特定 stash を戻す
+```
+
+* stash は **後入れ先出し（LIFO）** で管理される
+* 古い stash を戻すとコンフリクトの可能性大
+
+---
+
+## 6. コミットのやり直し
+
+### 6.1 最新コミットを修正
+
+```bash
+git commit --amend
+```
+
+* コミットメッセージやステージ内容を修正
+* push 済みの場合は注意（履歴が変わる）
+
+---
+
+### 6.2 コミットからファイルを外す
+
+```bash
+git reset HEAD^ -- file.py   # コミットから外して unstaged に戻す
+git restore --staged file.py # ステージから外すだけ
+```
+
+---
+
+## 7. 補足
+
+* `.DS_Store` … macOS Finder が作るフォルダ表示設定ファイル
+* `git reset --soft HEAD^` … コミットだけ取り消して add 状態は残す
+* `git reset HEAD^ -- file.py` … 特定ファイルだけコミットから外してワークツリーに戻す
+
+---
